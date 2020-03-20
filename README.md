@@ -57,9 +57,7 @@ public class HomeController {
 	 */
 	//ajax : 자바스크립트를 이용해 비동기적으로 서버와 브라우저 간 데이터를 교환하는 통신 방식
 	// 방법 #1
-	$(document).ready(function() {
-	//document가 준비된 후 자바 스크립트 시작 	
-		
+	$(document).ready(function() { // <= document가 준비된 후 자바 스크립트 시작한다
 		$("#btn").on('click', function() {
 			// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
 			var dataList = {
