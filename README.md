@@ -186,27 +186,33 @@ $("#btn2").on('click', function() {
 ```
 
 
+
+## 오늘의 정리
+```
+- class는 모든 인덱스를 가져온다 
+- Id는 인덱스[0]밖에 가져오지못한다
+<input Id = "">  JQuery : $('#Id값')
+<input class = ""> JQuery : $('.class값')
+키워드 JQuery : $('키워드값')
 ```
 
-
+```
+- $('#btn').click( function() { }); 
+	1. 고유성 있음
+	2. 해당 document가 있어야 스크립트 실행 가능 
+	3. 최초에 선언된 element에만 동작 
+	4. 추가 함수에 있어서 실행이 안됨 ex) $('#btn').append().... 실행 x
+- $(document).on('click', function() { }); 
+	1. 고유성 없음
+	2. 동적으로 가능
 ```
 
-
-
-### 정리
-class는 모든 인덱스를 가져온다 
-Id는 인덱스[0]밖에 가져오지못한다
-ex) 
-<input Id = "">  
-<input class = "">
-
 ```
-$('#btn').click( function() { }); 
-1. 고유성 있음
-2. 해당 document가 있어야 스크립트 실행 가능 
-3. 최초에 선언된 element에만 동작 
-$(document).on('click', function() { }); 
-1. 고유성 없음
-2. 동적으로 가능
-3.
+- 일반 함수 
+	1. 코드 전체를 파싱하는 단계에 생성 
+	ex) function test() { } 
+- 인라인(inline) 함수 
+	1. 변수에 대입되는 방식이므로 런타임 시 생성
+	2. 이 변수를 이용해 다른 코드에서 함수를 재사용
+	ex) var test1 = function () { } 
 ```
