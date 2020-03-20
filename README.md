@@ -216,3 +216,20 @@ $("#btn2").on('click', function() {
 	2. 이 변수를 이용해 다른 코드에서 함수를 재사용
 	ex) var test1 = function () { } 
 ```
+
+```
+- 디버깅 시 console을 이용해서 데이터값 확인하고 
+  form을 이용해 값을 보낼 때는 network에서 form Data 확인 
+- 디버깅 새로 고침은 ctrl + shift + R 
+- JSON형태로 데이터를 보내려면 HashMap형태로 리턴해야함
+- 읽어낼 document가 있어야 $("#btn2").on('click', function() { 와 같은 스트립트 처리가 가능
+- var test = {
+	a : 1,
+	b : 2
+  };
+  console.Info(test) => 출력 가능 
+  console.Info(test + "") => 출력 불가능 
+  console.div(test) => 출력 가능 
+  console.div(test + "") => 출력 불가능 
+  console.log(test + "") => 출력 가능
+```
