@@ -231,9 +231,9 @@ $("#btn2").on('click', function() {
 		return list;
 	}
 ```
-### => 바로 data를 뽑아내면 "Object object" 출력이 되기때문에 $.each를 사용해 출력하는데 JSON형태를 
-###    List형태로 리턴하여 출력을 하여 뽑아낸다
-
+```
+=> 바로 data를 뽑아내면 "Object object" 출력이 되기때문에 $.each를 사용해 출력하는데 JSON형태를 List형태로 리턴하여 출력을 하여 뽑아낸다
+```
 ```javascript
 	$(document).ready(function() {
 	//document가 준비된 후 자바 스크립트 시작 	
@@ -278,4 +278,4 @@ $("#btn2").on('click', function() {
 
 ```
 
-![HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_Project-Freeboard-/master/pic/pic1.PNG)
+![HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_MyBatis/master/Pic/ajax_20200322(Lode%20Data%20at%20HTML).PNG)
