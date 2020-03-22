@@ -1,4 +1,6 @@
 - [202003020](#20200320) - controller + ajax 구현(한줄평 : 좀 더 다양하고 다른 방식의 코드로 구현 해보자)
+- [202003022](#20200322) - controller + ajax 수정(한줄평 : JS만으로 ajax를 대체해보자. $.each를 사용하려면 json형태를 리스트
+                                                          (?)형태로 만들어야되나봄)
 
 # 20200320 
 
@@ -209,3 +211,71 @@ $("#btn2").on('click', function() {
   console.div(test + "") => 출력 불가능 
   console.log(test + "") => 출력 가능
 ```
+
+
+# 20200322
+```java
+@RequestMapping(value = "/inputRequest", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Map<String, Object>> insert(HttpServletRequest request) {
+		//JSON형태로 데이터를 보내려면 HashMap형태로 리턴해야함
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String bookName = request.getParameter("name");
+		String bookPublisher = request.getParameter("publisher");
+		String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		map.put("name", bookName);
+		map.put("publisher", bookPublisher);
+		map.put("updateDate", currentDate);
+		list.add(map);
+		return list;
+	}
+```
+### => 바로 data를 뽑아내면 "Object object" 출력이 되기때문에 $.each를 사용해 출력하는데 JSON형태를 
+###    List형태로 리턴하여 출력을 하여 뽑아낸다
+
+```javascript
+	$(document).ready(function() {
+	//document가 준비된 후 자바 스크립트 시작 	
+		
+		$("#btn").on('click', function() {
+			// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
+			var dataList = {
+					name : $('#name').val(), 
+					// $('#name').val() => id = name의 값 
+					publisher : $('#publisher').val(), 
+					// $('#publisher').val() => id = publisher의 값
+					updateDate : ""
+				};
+			alert("버튼이 클릭");
+			$.ajax({
+				url : "/inputRequest",
+				type : "POST",
+				data : dataList, 
+				dataType : "json", // ajax 통신으로 받는 타입
+				success : function(data) {
+					console.log("success");
+					console.info(data);
+					$('table').html("<tr><th>번호</th><th>도서명</th><th>출판사명</th><th>업데이트날짜</th></tr>");
+					var url = "";
+					//질문사항 : 입력값이 나오려면 JSON형태를 list형태로 리턴해야하는가??
+					$.each(data, function(index, item) {
+						url += "<tr><td>"+ index +"</td>";
+						url += "<td>"+ item.name +"</td>";
+						url += "<td>"+ item.publisher +"</td>";
+						url += "<td>"+ item.updateDate +"</td></tr>";
+										
+					});
+					$("table").append(url);
+					// 출처 : http://blog.naver.com/PostView.nhn?blogId=duddnddl9&logNo=220568856214
+				},
+				error : function() {
+					alert("error(포기하지마라)");
+				}
+			});
+		});
+	});
+
+```
+
+![HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_Project-Freeboard-/master/pic/pic1.PNG)
