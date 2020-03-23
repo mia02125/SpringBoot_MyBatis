@@ -1,7 +1,7 @@
 - [202003020](#20200320) - controller + ajax 구현(한줄평 : 좀 더 다양하고 다른 방식의 코드로 구현 해보자)
 - [202003022](#20200322) - controller + ajax 수정(한줄평 : JS만으로 ajax를 대체해보자. $.each를 사용하려면 json형태를 리스트
                                                           (?)형태로 리턴해야하나봄)
-
+- [202003023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
 # 20200320 
 
 ### HomeController 
@@ -281,3 +281,30 @@ $("#btn2").on('click', function() {
 ```
 
 ![HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_MyBatis/master/Pic/ajax_20200322(Lode%20Data%20at%20HTML).PNG)
+
+
+# 20200323
+ ```javscript
+	 // 방법 #3 
+	 function btn3() { 
+		alert("btn3 이벤트");		
+		var today = new Date();
+		var book = {		
+			name : document.getElementById("name").value,
+			publisher : document.getElementById("publisher").value,
+			updateDate : today.toLocaleString(),
+			info : function() { 
+				console.info(book);
+				document.write("도서명 :" + this.name + "<br>");
+				document.write("출판사명 :" + this.publisher + "<br>");
+				document.write("업데이트 날짜 :" + this.updateDate + "<br>");
+			}
+		};
+		document.write("<h1>서적관리시스템</h1>")
+		book.info();
+	}
+```
+
+```html
+<button id="btn3" onclick="btn3()">버튼3</button>
+```
