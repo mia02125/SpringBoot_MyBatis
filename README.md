@@ -284,7 +284,7 @@ $("#btn2").on('click', function() {
 
 
 # 20200323
- ```javscript
+ ```js
 	 // 방법 #3 
 	 function btn3() { 
 		alert("btn3 이벤트");		
