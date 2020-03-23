@@ -212,6 +212,10 @@ $("#btn2").on('click', function() {
   console.log(test + "") => 출력 가능
 ```
 
+```
+톰캣은 exe 파일로 다운로드 받지말고 알집파일로 받을것 
+```
+
 
 # 20200322
 ```java
@@ -284,7 +288,7 @@ $("#btn2").on('click', function() {
 
 
 # 20200323
- ```javscript
+ ```js
 	 // 방법 #3 
 	 function btn3() { 
 		alert("btn3 이벤트");		
@@ -295,9 +299,18 @@ $("#btn2").on('click', function() {
 			updateDate : today.toLocaleString(),
 			info : function() { 
 				console.info(book);
-				document.write("도서명 :" + this.name + "<br>");
-				document.write("출판사명 :" + this.publisher + "<br>");
-				document.write("업데이트 날짜 :" + this.updateDate + "<br>");
+				str += "<table border=1 width=500>";
+				str += "<tr align=center>";
+				str += 		"<th>도서명</th>"
+				str += 		"<th>출판사명</th>";
+				str += 		"<th>업데이트 날짜</th></tr>"; 
+				str += "</tr>";
+				str += "<tr align=center>";
+				str += 		"<td>" + this.name + "</td>";
+				str += 		"<td>" + this.publisher + "</td>";
+				str += 		"<td>" + this.updateDate + "</td>";
+				str += "</tr>";
+				document.write(str);
 			}
 		};
 		document.write("<h1>서적관리시스템</h1>")
@@ -308,3 +321,4 @@ $("#btn2").on('click', function() {
 ```html
 <button id="btn3" onclick="btn3()">버튼3</button>
 ```
+![JS만으로 HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_MyBatis/master/Pic/JS_20200320_getElementById.PNG)
