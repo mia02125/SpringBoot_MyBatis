@@ -295,9 +295,14 @@ $("#btn2").on('click', function() {
 			updateDate : today.toLocaleString(),
 			info : function() { 
 				console.info(book);
-				document.write("도서명 :" + this.name + "<br>");
-				document.write("출판사명 :" + this.publisher + "<br>");
-				document.write("업데이트 날짜 :" + this.updateDate + "<br>");
+				str += "<table border=1>";
+				str += "<tr><th>도서명</th>";
+				str += "<th>출판사명</th>";
+				str += "<th>업데이트 날짜</th></tr>"; 
+				str += "<tr><td>" + this.name + "</td>";
+				str += "<td>" + this.publisher + "</td>";
+				str += "<td>" + this.updateDate + "</td></tr>";
+				document.write(str);
 			}
 		};
 		document.write("<h1>서적관리시스템</h1>")
