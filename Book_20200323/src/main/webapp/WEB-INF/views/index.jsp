@@ -5,6 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+ 
+
+
+</style>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!-- Jquery를 사용하기위해서 라이브러리 추가 -->
 <!-- ajax를 사용하기위해  jackson 라이브러리 추가(pom.xml) -->
@@ -25,7 +30,7 @@
 	// 방법 #1
 	$(document).ready(function() {
 	//document가 준비된 후 자바 스크립트 시작 	
-		$("#btn").on('click', function() {
+		$("#btn1").on('click', function() {
 			// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
 			var dataList = {
 					name : $('#name').val(), 
@@ -43,15 +48,16 @@
 				success : function(data) { 
 					console.log("success");
 					console.info(data);
-					$('table').html("<tr><th>번호</th><th>도서명</th><th>출판사명</th><th>업데이트날짜</th></tr>");
+					$('table').html("<tr align=center><th>번호</th><th>도서명</th><th>출판사명</th><th>업데이트날짜</th></tr>");
 					var url = "";
 					//질문사항 : 입력값이 나오려면 JSON형태를 list를 넣어 index화해야하는가 
 					$.each(data, function(index, item) {
-						url += "<tr><td>"+ index +"</td>";
-						url += "<td>"+ item.name +"</td>";
-						url += "<td>"+ item.publisher +"</td>";
-						url += "<td>"+ item.updateDate +"</td></tr>";
-										
+						url += "<tr align=center>";
+						url += 		"<td>" + index + "</td>";
+						url += 		"<td>" + item.name + "</td>";
+						url += 		"<td>" + item.publisher + "</td>";
+						url += 		"<td>" + item.updateDate + "</td>";
+						url += "</tr>"				
 					});
 					$("table").append(url);
 					// 출처 : http://blog.naver.com/PostView.nhn?blogId=duddnddl9&logNo=220568856214
@@ -67,15 +73,27 @@
 	 function btn3() { 
 		alert("btn3 이벤트");		
 		var today = new Date();
+		var str = "";
 		var book = {		
 			name : document.getElementById("name").value,
 			publisher : document.getElementById("publisher").value,
 			updateDate : today.toLocaleString(),
-			info : function() { 
+			info : function() {
 				console.info(book);
-				document.write("도서명 :" + this.name + "<br>");
-				document.write("출판사명 :" + this.publisher + "<br>");
-				document.write("업데이트 날짜 :" + this.updateDate + "<br>");
+				str += "<table border=1 width=500>";
+				str += "<tr align=center>";
+				str += 		"<th>도서명</th>"
+				str += 		"<th>출판사명</th>";
+				str += 		"<th>업데이트 날짜</th></tr>"; 
+				str += "</tr>";
+				str += "<tr align=center>";
+				str += 		"<td>" + this.name + "</td>";
+				str += 		"<td>" + this.publisher + "</td>";
+				str += 		"<td>" + this.updateDate + "</td>";
+				str += "</tr>";
+				document.write(str);
+				
+				
 			}
 		};
 		document.write("<h1>서적관리시스템</h1>")
@@ -93,8 +111,8 @@
 	<button id="btn1">버튼1</button>
 	<button id="btn2">버튼2</button>
 	<button id="btn3" onclick="btn3()">버튼3</button>
-	<table>
-	
+	<table width = 500>
+	<!-- 자바 스크립트 -->
 	</table>
 
 </body>
