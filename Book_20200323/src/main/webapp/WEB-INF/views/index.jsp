@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!-- Jquery를 사용하기위해서 라이브러리 추가 -->
-<!-- ajax를 사용하기위해  jackson 라이브러리 추가(pom.xml) --> 
+<!-- ajax를 사용하기위해  jackson 라이브러리 추가(pom.xml) -->
 <script type="text/javascript">
 	/*
 	 debugger;
@@ -25,7 +25,6 @@
 	// 방법 #1
 	$(document).ready(function() {
 	//document가 준비된 후 자바 스크립트 시작 	
-		
 		$("#btn").on('click', function() {
 			// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
 			var dataList = {
@@ -36,15 +35,26 @@
 					updateDate : ""
 				};
 			alert("버튼이 클릭");
-			$.ajax({
-				url : "/inputRequest",
-				type : "POST",
-				data : dataList, 
+			$.post({
+				url : "/inputRequest", // 전송페이지(action url)
+				type : "POST", // 전송방식
+				data : dataList, //전송할 데이터
 				dataType : "json", // ajax 통신으로 받는 타입
-				success : function(data) {
+				success : function(data) { 
 					console.log("success");
 					console.info(data);
-					$('#resultData').html(data);
+					$('table').html("<tr><th>번호</th><th>도서명</th><th>출판사명</th><th>업데이트날짜</th></tr>");
+					var url = "";
+					//질문사항 : 입력값이 나오려면 JSON형태를 list를 넣어 index화해야하는가 
+					$.each(data, function(index, item) {
+						url += "<tr><td>"+ index +"</td>";
+						url += "<td>"+ item.name +"</td>";
+						url += "<td>"+ item.publisher +"</td>";
+						url += "<td>"+ item.updateDate +"</td></tr>";
+										
+					});
+					$("table").append(url);
+					// 출처 : http://blog.naver.com/PostView.nhn?blogId=duddnddl9&logNo=220568856214
 				},
 				error : function() {
 					alert("error(포기하지마라)");
@@ -52,21 +62,45 @@
 			});
 		});
 	});
+	 
+	 // 방법 #3 
+	 function btn3() { 
+		alert("btn3 이벤트");		
+		var today = new Date();
+		var book = {		
+			name : document.getElementById("name").value,
+			publisher : document.getElementById("publisher").value,
+			updateDate : today.toLocaleString(),
+			info : function() { 
+				console.info(book);
+				document.write("도서명 :" + this.name + "<br>");
+				document.write("출판사명 :" + this.publisher + "<br>");
+				document.write("업데이트 날짜 :" + this.updateDate + "<br>");
+			}
+		};
+		document.write("<h1>서적관리시스템</h1>")
+		book.info();
+	}
+	
+	 
 </script>
 <body>
-	<form id ="input" method="post">
+	<form id="input" method="post">
 		<input type="text" name="name" id="name" placeholder="name"> <br>
 		<input type="text" name="publisher" id="publisher"
 			placeholder="publisher">
 	</form>
-	<button id="btn">버튼1</button>
+	<button id="btn1">버튼1</button>
 	<button id="btn2">버튼2</button>
-	<div id="resultData"></div>
+	<button id="btn3" onclick="btn3()">버튼3</button>
+	<table>
+	
+	</table>
 
 </body>
 <!-- document 밑에는 가능 -->
 <script type="text/javascript">
-$("#btn2").on('click', function() {
+$("#btn2").click( function() {
 	// 위에 읽어낼 document가 있기때문에   $(document).ready(function() {가 필요없음 
 	var dataList = {
 			//JSON형태이기떄문에 map형태로 받아야함(이름=값) 
@@ -83,11 +117,10 @@ $("#btn2").on('click', function() {
 		type : "POST",
 		data : dataList, 
 		dataType : "json", // ajax 통신으로 받는 타입
-
+		
 		success : function(data) {
 			console.log("success");
 			console.info(data);
-			$('#resultData').html(data);
 		},
 		error : function(error) {
 			console.error(error)
