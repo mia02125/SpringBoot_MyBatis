@@ -321,4 +321,4 @@ $("#btn2").on('click', function() {
 ```html
 <button id="btn3" onclick="btn3()">버튼3</button>
 ```
-![JS만으로 HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_MyBatis/master/Pic/JS_20200320_getElementById.PNG)
+![JS만으로 HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_MyBatis/master/Pic/JS_20200323_getElementById.PNG)
