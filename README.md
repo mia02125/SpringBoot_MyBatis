@@ -327,10 +327,17 @@ $("#btn2").on('click', function() {
 
 
 # 20200326
+ -src
+	-main 
+  		-resources
+  			BookMapper.xml
+			jdbc.propertis
+			log4j.xml
+			mybatis-config.xml
 
 ## Mybatis 설정 
 
-### jdbc.properties
+### jdbc.properties 생성 
 ```
 jdbc.driverClassName=org.postgresql.Driver
 jdbc.url=jdbc:postgresql://localhost:5432/postgres?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8
@@ -347,7 +354,7 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         	<property name="locations" value="classpath:jdbc.properties" />
         	<property name="fileEncoding" value="UTF-8" />
-    </bean>
+   	</bean>
 	<!-- postgres datasource를 가져오지 못하면 root-context.xml에 직접 적어서 연결하기 -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
@@ -369,7 +376,7 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 	
 ```
 
-### BookMapper(SQL쿼리를 입력)
+### BookMapper.xml(SQL쿼리를 입력) 생성
 ```
 <?xml version="1.0" encoding="UTF-8"?>
  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -381,7 +388,7 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 
  </mapper>
 ```
-### mybatis-config.xml(Mybatis Mapper를 등록하는 xml)
+### mybatis-config.xml(Mybatis Mapper를 등록하는 xml) 생성
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
@@ -405,5 +412,7 @@ ex)
 </context:component-scan> 
 
 ```
+
+#### 데이터의 주소값 출력 
 
 ![JS만으로 HTML출력](https://github.com/mia02125/SpringBoot_MyBatis/blob/master/Pic/mybatis_20200320_DB%EC%97%B0%EA%B2%B0.PNG)
