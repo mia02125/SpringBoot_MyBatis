@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	 <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:jdbc.properties" />
+        <property name="fileEncoding" value="UTF-8" />
+    </bean>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8" />
+        <property name="username" value="postgres" />
+        <property name="password" value="oracle" />
+	</bean>
+	<!-- Mybatis와  spring을 연동 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- DB에서 실행할 sql 문장을 태그로 정의해 놓는다. -->
+		<property name="mapperLocations" value="classpath:BookMapper.xml"/>
+	</bean>
+		
+	<!-- 3. Mybatis DB 프로그램의 자동화 객체 -> template -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+<!-- 
+	mapper에서 scan하지 않을꺼면 여기서  해준다
+	base-package는 mapper의 경로를 찾는데 interface에는 객체로 사용할 수 없기 때문에
+	@annotation이 붙을 수 없음. 그래서 mapperImpl의 패키지를 등록
+-->
+<context:component-scan base-package="com.example.mapperImpl">
+</context:component-scan>
+	
+</beans>
+
