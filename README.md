@@ -2,7 +2,7 @@
 - [202003022](#20200322) - controller + ajax 수정(한줄평 : JS만으로 ajax를 대체해보자. $.each를 사용하려면 json형태를 리스트
                                                           (?)형태로 리턴해야하나봄)
 - [202003023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
-- [202003026](#20200326) - MyBatis + DB
+- [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
 # 20200320 
 
 ### HomeController 
@@ -376,8 +376,9 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 	
 ```
 
+
 ### BookMapper.xml(SQL쿼리를 입력) 생성
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.example.mapper.BookMapper"><!-- 인터페이스 mapper의 경로 -->
@@ -388,8 +389,10 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 
  </mapper>
 ```
+
+
 ### mybatis-config.xml(Mybatis Mapper를 등록하는 xml) 생성
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
@@ -402,6 +405,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 </configuration>
 ```
 
+
+## 오늘의 정리
+
 ```
 base-package는 mapper의 경로를 찾는데 interface에는 객체로 사용할 수 없기 때문에
 @annotation이 붙을 수 없음. 그래서 mapperImpl의 패키지를 등록
@@ -412,7 +418,5 @@ ex)
 </context:component-scan> 
 
 ```
-
-#### 데이터의 주소값 출력 
 
 ![JS만으로 HTML출력](https://github.com/mia02125/SpringBoot_MyBatis/blob/master/Pic/mybatis_20200320_DB%EC%97%B0%EA%B2%B0.PNG)
