@@ -369,7 +369,7 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 		<property name="mapperLocations" value="classpath:BookMapper.xml"/>
 	</bean>
 		
-	<!-- 3. Mybatis DB 프로그램의 자동화 객체 -> template -->
+	<!-- SQLSessionTemplate 설정 : DAO인터페이스를 만들었기 때문에 Mybatis에서 DAO인터페이스를 구현하기 위해 필요한 작업 -->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
@@ -411,8 +411,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 ## 오늘의 정리
 
 ```
-base-package는 mapper의 경로를 찾는데 interface에는 객체로 사용할 수 없기 때문에
+1. base-package는 mapper의 경로를 찾는데 interface에는 객체로 사용할 수 없기 때문에
 @annotation이 붙을 수 없음. 그래서 mapperImpl의 패키지를 등록
+2. @Repository 를 사용하여 DAO라고 명시해도 스프링에서 해당하는 패키지를 스캔하지않으면 제대로 스프링의 빈으로 등록되지 않기 때문에 
+이를 방지하고자 아래 <context:component-scan ~ 작성 
 <context:component-scan base-package="@annotation된 mapper패키지">
 </context:component-scan> 
 ex)
