@@ -373,6 +373,8 @@ namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation �
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
+	<context:component-scan base-package="com.example.mapperImpl">
+	</context:component-scan>
 	
 ```
 
