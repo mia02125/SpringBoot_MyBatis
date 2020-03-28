@@ -462,6 +462,8 @@ ex)
 * 오류내용
 1. 테이블 내 여러 데이터가 있으면 오류가 생김 
 심각: org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.TooManyResultsException: Expected one result (or null) to be returned by selectOne(), but found: 5] with root cause
+1-1. Could not find result map 
+=> 해결은 했지만 정확한 이유를 찾아보자 
 2. 오류 해결방안 찾기
 
 ```
