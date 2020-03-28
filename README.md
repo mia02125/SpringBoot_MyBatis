@@ -2,6 +2,7 @@
 - [202003022](#20200322) - controller + ajax 수정(한줄평 : JS만으로 ajax를 대체해보자. $.each를 사용하려면 json형태를 리스트
                                                           (?)형태로 리턴해야하나봄)
 - [202003023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
+- [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
 # 20200320 
 
 ### HomeController 
@@ -322,3 +323,104 @@ $("#btn2").on('click', function() {
 <button id="btn3" onclick="btn3()">버튼3</button>
 ```
 ![JS만으로 HTML출력](https://raw.githubusercontent.com/mia02125/SpringBoot_MyBatis/master/Pic/JS_20200323_getElementById.PNG)
+
+
+
+# 20200326
+ -src
+	-main 
+  		-resources
+  			BookMapper.xml
+			jdbc.propertis
+			log4j.xml
+			mybatis-config.xml
+
+## Mybatis 설정 
+
+### jdbc.properties 생성 
+```
+jdbc.driverClassName=org.postgresql.Driver
+jdbc.url=jdbc:postgresql://localhost:5432/postgres?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8
+jdbc.username=postgres
+jdbc.password=oralce
+```
+
+### root-context 설정
+```
+namespaces에서 beans / jdbc / context / mvc / mybatis 의 xsi:schemaLocation 항목 체크!!
+```
+```xml
+	<!-- jdbc.properties에서 데이터를 가져옴 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        	<property name="locations" value="classpath:jdbc.properties" />
+        	<property name="fileEncoding" value="UTF-8" />
+   	</bean>
+	<!-- postgres datasource를 가져오지 못하면 root-context.xml에 직접 적어서 연결하기 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+        	<property name="url" value="jdbc:postgresql://localhost:5432/postgres?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8" />
+        	<property name="username" value="postgres" />
+        	<property name="password" value="oracle" />
+	</bean>
+	<!-- Mybatis와  spring을 연동 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- DB에서 실행할 sql 문장을 태그로 정의해 놓는다. -->
+		<property name="mapperLocations" value="classpath:BookMapper.xml"/>
+	</bean>
+		
+	<!-- SQLSessionTemplate 설정 : DAO인터페이스를 만들었기 때문에 Mybatis에서 DAO인터페이스를 구현하기 위해 필요한 작업 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	<context:component-scan base-package="com.example.mapperImpl">
+	</context:component-scan>
+	
+```
+
+
+### BookMapper.xml(SQL쿼리를 입력) 생성
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.BookMapper"><!-- 인터페이스 mapper의 경로 -->
+
+     <select id="getBookList" resultType="com.example.model.Book">
+      SELECT * FROM "Book" 
+     </select>
+
+ </mapper>
+```
+
+
+### mybatis-config.xml(Mybatis Mapper를 등록하는 xml) 생성
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <mappers>
+        <mapper resource="BookMapper.xml"/>
+        <!--  -->
+    </mappers>
+</configuration>
+```
+
+
+## 오늘의 정리
+
+```
+1. base-package는 mapper의 경로를 찾는데 interface에는 객체로 사용할 수 없기 때문에
+@annotation이 붙을 수 없음. 그래서 mapperImpl의 패키지를 등록
+2. @Repository 를 사용하여 DAO라고 명시해도 스프링에서 해당하는 패키지를 스캔하지않으면 제대로 스프링의 빈으로 등록되지 않기 때문에 
+이를 방지하고자 아래 <context:component-scan ~ 작성 
+<context:component-scan base-package="@annotation된 mapper패키지">
+</context:component-scan> 
+ex)
+<context:component-scan base-package="com.example.mapperImpl">
+</context:component-scan> 
+
+```
+
+![JS만으로 HTML출력](https://github.com/mia02125/SpringBoot_MyBatis/blob/master/Pic/mybatis_20200320_DB%EC%97%B0%EA%B2%B0.PNG)
