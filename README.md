@@ -429,7 +429,8 @@ ex)
 
 # 20200329
 
-### 상세보기 추가하기 
+### 상세보기 + 삭제하기 추가하기 
+### detail 메서드
 ```java
 
 	@RequestMapping(value = "/detail/{Id}", method = RequestMethod.GET)
@@ -445,6 +446,15 @@ ex)
 		return "update";
 	}
 	
+```
+
+### delete 메서드 
+```java
+@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public String deleteBook() throws Exception {
+		bookMapper.deleteBook();
+		return "redirect:/";
+	}
 ```
 
 ```
