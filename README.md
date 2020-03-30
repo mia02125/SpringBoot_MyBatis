@@ -463,8 +463,10 @@ ex)
 1. 테이블 내 여러 데이터가 있으면 오류가 생김 
 심각: org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.TooManyResultsException: Expected one result (or null) to be returned by selectOne(), but found: 5] with root cause
 => BookMapper.xml에서 Id값에 ""로 씌어줌
-1-1. Could not find result map 
-=> 해결은 했지만 정확한 이유를 찾아보자 
-2. 오류 해결방안 찾기
-
+2. 오류: "bookname" 칼럼은 "Book" 릴레이션(relation)에 없음
+=> postgreSQL은 컬럼을 
+INSERT INTO "Book"(bookName, bookPublisher, updateDate) VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
+이렇게 쓰면 모두 소문자로 판단하여 오류가 생김
+INSERT INTO "Book"("bookName", "bookPublisher", "updateDate") VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
+그래서 이와 같이 대소문자가 같이 쓰였을 때 컬럼마다 ""를 붙여 줘야함 
 ```
