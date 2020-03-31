@@ -3,6 +3,7 @@
                                                           (?)형태로 리턴해야하나봄)
 - [202003023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
 - [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
+- [202003029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
 # 20200320 
 
 ### HomeController 
@@ -424,3 +425,48 @@ ex)
 ```
 
 ![JS만으로 HTML출력](https://github.com/mia02125/SpringBoot_MyBatis/blob/master/Pic/mybatis_20200320_DB%EC%97%B0%EA%B2%B0.PNG)
+
+
+# 20200329
+
+### 상세보기 + 삭제하기 추가하기 
+### detail 메서드
+```java
+
+	@RequestMapping(value = "/detail/{Id}", method = RequestMethod.GET)
+	public String detail(@PathVariable int Id ,Model model) throws Exception {
+		Book book = new Book();
+		book.setId(Id);
+		Book books = bookMapper.getBook(book);
+		model.addAttribute("bookDetail", books);
+		return "detail";
+	}
+	@RequestMapping(value = "/update/{Id}", method = RequestMethod.GET)
+	public String update(@PathVariable int Id) throws Exception { 
+		return "update";
+	}
+	
+```
+
+### delete 메서드 
+```java
+@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public String deleteBook() throws Exception {
+		bookMapper.deleteBook();
+		return "redirect:/";
+	}
+```
+
+## 오늘의 정리
+```
+* 오류내용
+1. 테이블 내 여러 데이터가 있으면 오류가 생김 
+심각: org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.TooManyResultsException: Expected one result (or null) to be returned by selectOne(), but found: 5] with root cause
+=> BookMapper.xml에서 Id값에 ""로 씌어줌
+2. 오류: "bookname" 칼럼은 "Book" 릴레이션(relation)에 없음
+=> postgreSQL은 컬럼을 
+INSERT INTO "Book"(bookName, bookPublisher, updateDate) VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
+이렇게 쓰면 모두 소문자로 판단하여 오류가 생김
+INSERT INTO "Book"("bookName", "bookPublisher", "updateDate") VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
+그래서 이와 같이 대소문자가 같이 쓰였을 때 컬럼마다 ""를 붙여 줘야함 
+```
