@@ -4,6 +4,7 @@
 - [202003023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
 - [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
 - [202003029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
+- [202003031](#20200331) - 특정 데이터 삭제 로직 추가(한줄평 : update 로직에 대해 좀더 공부하자.. @RequestBody..)
 # 20200320 
 
 ### HomeController 
@@ -469,4 +470,31 @@ INSERT INTO "Book"(bookName, bookPublisher, updateDate) VALUES (#{bookName}, #{b
 이렇게 쓰면 모두 소문자로 판단하여 오류가 생김
 INSERT INTO "Book"("bookName", "bookPublisher", "updateDate") VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
 그래서 이와 같이 대소문자가 같이 쓰였을 때 컬럼마다 ""를 붙여 줘야함 
+```
+
+
+# 20200331
+
+
+### delete/{bookId} 추가 
+```java
+@RequestMapping(value = "/delete/{bookId}", method = RequestMethod.POST)
+	public String deleteBookOne(@PathVariable(value = "bookId") int bookId, Book book) throws Exception {
+		book.setBookId(bookId);
+		bookDAO.deleteBookOne(book);
+		return "redirect:/";
+	}
+```
+
+## 오늘의 정리
+```
+@RequestBody은 @RequestMapping에 의해 POST방식으로 전송된 HTTP요청 데이터를 String타입의 body파라미터로 전달된다.
+@ResponseBody이 @RequestMapping에 적용되면 해당 메서드의 리턴값을 HTTP 응답 데이터로 사용 
+ex) 
+@RequestMapping(method = RequestMethod.POST)	
+@ResponseBody
+public String Test(@RequestBody String body) { 
+	return body; // String값을 HTTP응답데이터로 전송
+}
+ajax를 사용하여 파라미터 값을 읽어냄  
 ```
