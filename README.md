@@ -488,8 +488,13 @@ INSERT INTO "Book"("bookName", "bookPublisher", "updateDate") VALUES (#{bookName
 
 ## 오늘의 정리
 ```
-1. @RequestBody은 @RequestMapping에 의해 POST방식으로 전송된 HTTP요청 데이터(body)를 자바 객체로 전달받음
-2. @ResponseBody이 @RequestMapping에 적용되면 해당 메서드의 리턴값을 HTTP 응답 데이터로 사용 
+1. @RequestBody
+	- @RequestMapping에 의해 POST방식으로 전송된 HTTP요청 데이터(body)를 자바 객체로 전달받음
+	- @RequestBody가 적용된 경우, 리턴 객체를 JSON이나 XML과 같은 알맞은 응답으로 변환
+2. @ResponseBody
+	- @ResponseBody가 @RequestMapping에 적용되면 해당 메서드의 리턴값을 HTTP 응답 데이터로 사용 
+	- 직접 JSON데이터 형식으로 저장하여 리턴할 필요없이 자동으로 JSON데이터 형식으로 리턴
+	
 ex) 
 @RequestMapping(method = RequestMethod.POST)	
 @ResponseBody
@@ -497,4 +502,5 @@ public String Test(@RequestBody String body) {
 	return body; // String값을 HTTP응답데이터로 전송
 }
 ajax를 사용하여 파라미터 값을 읽어냄  
+
 ```
