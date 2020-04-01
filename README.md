@@ -5,6 +5,9 @@
 - [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
 - [202003029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
 - [202003031](#20200331) - 특정 데이터 삭제 로직 추가(한줄평 : update 로직에 대해 좀더 공부하자.. @RequestBody..)
+- [20200401](#20200401) -  ajax를 이용해서 데이터를 insert해보자 
+
+
 # 20200320 
 
 ### HomeController 
@@ -502,5 +505,67 @@ public String Test(@RequestBody String body) {
 	return body; // String값을 HTTP응답데이터로 전송
 }
 ajax를 사용하여 파라미터 값을 읽어냄  
+```
 
+
+# 20200401
+```java
+```
+
+```javascript
+$(document).ready(function() {
+	//document가 준비된 후 자바 스크립트 시작 	
+		$("#btn1").on('click', function() {
+			// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
+			var dataList = {
+					bookName : $('#bookName').val(), 
+					// $('#name').val() => id = name의 값 
+					bookPublisher : $('#bookPublisher').val(), 
+					// $('#publisher').val() => id = publisher의 값
+					bookUpdateDate : ""
+				};
+			alert("버튼 클릭");
+			$.ajax({
+				url : "/input", // 전송페이지(action url)
+				type : "POST", // 전송방식
+				data : JSON.stringify(dataList), // 전송할 데이터 
+// 				dataType : "json", // return 타입에 따라 data타입 결정 
+				contentType : "application/json; charset=utf-8",
+				success : function(data) { 
+					console.log("success");
+					console.info(data);
+				},
+				error : function(e) {
+					alert("error(포기하지마라)");
+					console.log(e);
+				}
+			});
+		});
+	});
+```
+
+
+```html
+<body>
+<input type="text" name="bookName" id="bookName" placeholder="name"> 
+<br>
+<input type="text" name="bookPublisher" id="bookPublisher" placeholder="publisher">
+<button id="btn1" type="button">버튼1</button>
+</body>
+```
+
+### 오늘의 
+```
+1. @RequestBody & @ModelAttribute 
+@RequestBody : POST방식을 통해 요청된 Body에 데이터를 담는다.
+@ModelAttribute : 데이터를 받아오되 JSON형식에서 파라미터값만 가져온다.
+ex) { name : "최재민" } => "최재민"
+2. ajax
+$.ajax({
+	url : // 전송페이지
+	type : //전송방식
+	data : // 전송할 데이터
+	dataType : // ajax로 받는 return된 타입(전송할 데이터의 타입이 아님!!)
+	contentType : //??
+	
 ```
