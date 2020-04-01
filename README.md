@@ -545,7 +545,7 @@ $(document).ready(function() {
 			$.ajax({
 				url : "/input", // 전송페이지(action url)
 				type : "POST", // 전송방식
-				data : JSON.stringify(dataList), // 전송할 데이터 
+				data : JSON.stringify(dataList), // 전송할 데이터(JSON.stringify() 을 사용하여 데이터를 문자열화)
 // 				dataType : "json", // return 타입에 따라 data타입 결정 
 				contentType : "application/json; charset=utf-8",
 				success : function(data) { 
