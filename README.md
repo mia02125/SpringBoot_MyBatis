@@ -5,7 +5,7 @@
 - [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
 - [202003029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
 - [202003031](#20200331) - 특정 데이터 삭제 로직 추가(한줄평 : update 로직에 대해 좀더 공부하자.. @RequestBody..)
-- [20200401](#20200401) -  ajax를 이용해서 데이터를 insert해보자 
+- [20200401](#20200401) -  ajax를 이용해서 데이터를 insert
 
 
 # 20200320 
@@ -37,7 +37,7 @@ public class HomeController {
 
 ```
 
-### index.jsp
+## index.jsp
 ```html
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -294,6 +294,9 @@ $("#btn2").on('click', function() {
 
 
 # 20200323
+
+
+### index.JSP
  ```js
 	 // 방법 #3 
 	 function btn3() { 
@@ -509,9 +512,23 @@ ajax를 사용하여 파라미터 값을 읽어냄
 
 
 # 20200401
+
+### BookController
 ```java
+@Autowired
+	private BookDAO bookDAO;
+	
+	@RequestMapping(value = "/input", method = RequestMethod.POST)
+	@ResponseBody
+	public String insertBook(@RequestBody Book book) throws Exception { 
+		// ajax에서 Post방식으로 Book이라는 객체의 Body에 데이터를 받아온다
+		String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		book.setBookUpdateDate(currentDate);
+		bookDAO.insertBook(book);
+		return "redirect:/";
 ```
 
+### index.JSP
 ```javascript
 $(document).ready(function() {
 	//document가 준비된 후 자바 스크립트 시작 	
@@ -570,5 +587,6 @@ $.ajax({
 3. redirect & forward 핵심 
 	3-1. redirect : 요청정보를 새롭게 요청!!
 	3-2. forward  : 요청정보를 재활용!!
-		
+4. 테이블 컬럼을 찾지못하는 오류가 생기면 ajax로직이 틀리진 않았는지 확인하고, Book이라는 객체 @RequestBody를 통해 가져올 수 있는지 확인하기!!
+5. @어노테이션을 사용하지않고 XML에 등록하여 따로 선언하지않아도 사용할 수 있다.
 ```
