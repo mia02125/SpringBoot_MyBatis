@@ -554,12 +554,12 @@ $(document).ready(function() {
 </body>
 ```
 
-### 오늘의 
+### 오늘의 정리
 ```
 1. @RequestBody & @ModelAttribute 
-@RequestBody : POST방식을 통해 요청된 Body에 데이터를 담는다.
-@ModelAttribute : 데이터를 받아오되 JSON형식에서 파라미터값만 가져온다.
-ex) { name : "최재민" } => "최재민"
+	1-1. @RequestBody : POST방식을 통해 요청된 Body에 데이터를 담는다.
+	1-2. @ModelAttribute : 데이터를 받아오되 JSON형식에서 파라미터값만 가져온다.
+	ex) { name : "최재민" } => "최재민"
 2. ajax
 $.ajax({
 	url : // 전송페이지
@@ -567,5 +567,8 @@ $.ajax({
 	data : // 전송할 데이터
 	dataType : // ajax로 받는 return된 타입(전송할 데이터의 타입이 아님!!)
 	contentType : //??
-	
+3. redirect & forward 핵심 
+	3-1. redirect : 요청정보를 새롭게 요청!!
+	3-2. forward  : 요청정보를 재활용!!
+		
 ```
