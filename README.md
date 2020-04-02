@@ -677,6 +677,7 @@ $.ajax({
 		session.setAttribute("bookId", books.getBookId()); // session에 books.getBookId()값을 value값으로 저장한다. 
 		return "detail";
 	}
+```
 ```java
 @RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -713,6 +714,5 @@ $.ajax({
 				});
 			});
 		});
-```
 ```
 
