@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.dao.BookDAO"><!-- 인터페이스 mapper의 경로 -->
+	<!-- #{ } 안의 값은 BookVO의 변수값이다 -->
+     <select id="getBookList" resultType="com.example.model.Book">
+     	SELECT * FROM "Book" 
+     </select>
+     <!-- 태그안에 resultMap을 사용하려면 <resultMap 태그를 설정해줘야 오류가 발생하지않음 --> 
+     <select id="getBook" resultType="com.example.model.Book">
+     SELECT * FROM "Book" WHERE "bookId" = #{bookId}
+     </select>
+     <select id="getBookOne" resultType="com.example.model.Book">
+     SELECT * FROM "Book" WHERE "bookName"  LIKE %#{bookName}% or "bookPublisher" Like %#{bookPublisher}%;
+     </select>
+	<insert id="insertBook">
+		INSERT INTO "Book"("bookName", "bookPublisher", "bookUpdateDate") VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
+		<!-- #{ } 안의 값은 BookVO의 변수값이다 --> 
+	</insert>
+	<update id="updateBook" parameterType="com.example.model.Book">
+		UPDATE "Book"
+			SET "bookName" = #{bookName}, "bookPublisher"= #{bookPublisher}
+				WHERE "bookId" = #{bookId}
+	</update>
+	<delete id="deleteBook">
+		DELETE FROM "Book"
+	</delete>
+	
+	<delete id="deleteBookOne">
+		DELETE FROM "Book" WHERE "bookId" = #{bookId}
+	</delete>
+ </mapper>
+
+ 
+ 
+ 
