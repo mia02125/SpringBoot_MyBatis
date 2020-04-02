@@ -1,9 +1,14 @@
-- [202003020](#20200320) - controller + ajax 구현(한줄평 : 좀 더 다양하고 다른 방식의 코드로 구현 해보자)
-- [202003022](#20200322) - controller + ajax 수정(한줄평 : JS만으로 ajax를 대체해보자. $.each를 사용하려면 json형태를 리스트
+- [20203020](#20200320) - controller + ajax 구현(한줄평 : 좀 더 다양하고 다른 방식의 코드로 구현 해보자)
+- [20203022](#20200322) - controller + ajax 수정(한줄평 : JS만으로 ajax를 대체해보자. $.each를 사용하려면 json형태를 리스트
                                                           (?)형태로 리턴해야하나봄)
-- [202003023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
-- [202003026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
-- [202003029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
+- [20203023](#20200323) - JS로 입력값 출력(한줄평 : controller값을 JS으로 가져올 방법이 없을까?)
+- [20203026](#20200326) - MyBatis + DB연결(한줄평 : interface는 객체로 쓸수 없는 껍데기이기 떄문에 annotation이 붙을 수 없다)
+- [20203029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
+- [20203031](#20200331) - 특정 데이터 삭제 로직 추가(한줄평 : update 로직에 대해 좀더 공부하자.. @RequestBody..)
+- [20200401](#20200401) -  ajax를 이용해서 데이터를 insert
+- [20200402](#20200402) -  ajax를 이용해서 데이터를 update (한줄평 : 세션을 이용해 javascript에서 값을 사용할 수 있다..서버에서 ID값을 가져오는 방법을 찾아보자) 
+
+
 # 20200320 
 
 ### HomeController 
@@ -33,7 +38,7 @@ public class HomeController {
 
 ```
 
-### index.jsp
+## index.jsp
 ```html
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -290,6 +295,9 @@ $("#btn2").on('click', function() {
 
 
 # 20200323
+
+
+### index.JSP
  ```js
 	 // 방법 #3 
 	 function btn3() { 
@@ -470,3 +478,192 @@ INSERT INTO "Book"(bookName, bookPublisher, updateDate) VALUES (#{bookName}, #{b
 INSERT INTO "Book"("bookName", "bookPublisher", "updateDate") VALUES (#{bookName}, #{bookPublisher}, #{bookUpdateDate});
 그래서 이와 같이 대소문자가 같이 쓰였을 때 컬럼마다 ""를 붙여 줘야함 
 ```
+
+
+# 20200331
+
+
+### delete/{bookId} 추가 
+```java
+@RequestMapping(value = "/delete/{bookId}", method = RequestMethod.POST)
+	public String deleteBookOne(@PathVariable(value = "bookId") int bookId, Book book) throws Exception {
+		book.setBookId(bookId);
+		bookDAO.deleteBookOne(book);
+		return "redirect:/";
+	}
+```
+
+## 오늘의 정리
+```
+1. @RequestBody
+	- @RequestMapping에 의해 POST방식으로 전송된 HTTP요청 데이터(body)를 자바 객체로 전달받음
+	- @RequestBody가 적용된 경우, 리턴 객체를 JSON이나 XML과 같은 알맞은 응답으로 변환
+2. @ResponseBody
+	- @ResponseBody가 @RequestMapping에 적용되면 해당 메서드의 리턴값을 HTTP 응답 데이터로 사용 
+	- 직접 JSON데이터 형식으로 저장하여 리턴할 필요없이 자동으로 JSON데이터 형식으로 리턴
+	
+ex) 
+@RequestMapping(method = RequestMethod.POST)	
+@ResponseBody
+public String Test(@RequestBody String body) { 
+	return body; // String값을 HTTP응답데이터로 전송
+}
+ajax를 사용하여 파라미터 값을 읽어냄  
+```
+
+
+# 20200401
+
+### BookController
+```java
+@Autowired
+	private BookDAO bookDAO;
+	
+	@RequestMapping(value = "/input", method = RequestMethod.POST)
+	@ResponseBody
+	public String insertBook(@RequestBody Book book) throws Exception { 
+		// ajax에서 Post방식으로 Book이라는 객체의 Body에 데이터를 받아온다
+		String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		book.setBookUpdateDate(currentDate);
+		bookDAO.insertBook(book);
+		return "redirect:/";
+```
+
+### index.JSP
+```javascript
+$(document).ready(function() {
+	//document가 준비된 후 자바 스크립트 시작 	
+		$("#btn1").on('click', function() {
+			// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
+			var dataList = {
+					bookName : $('#bookName').val(), 
+					// $('#name').val() => id = name의 값 
+					bookPublisher : $('#bookPublisher').val(), 
+					// $('#publisher').val() => id = publisher의 값
+					bookUpdateDate : ""
+				};
+			alert("버튼 클릭");
+			$.ajax({
+				url : "/input", // 전송페이지(action url)
+				type : "POST", // 전송방식
+				data : JSON.stringify(dataList), // 전송할 데이터(JSON.stringify() 을 사용하여 데이터를 문자열화)
+// 				dataType : "json", // return 타입에 따라 data타입 결정 
+				contentType : "application/json; charset=utf-8",
+				success : function(data) { 
+					console.log("success");
+					console.info(data);
+				},
+				error : function(e) {
+					alert("error(포기하지마라)");
+					console.log(e);
+				}
+			});
+		});
+	});
+```
+
+
+```html
+<body>
+<input type="text" name="bookName" id="bookName" placeholder="name"> 
+<br>
+<input type="text" name="bookPublisher" id="bookPublisher" placeholder="publisher">
+<button id="btn1" type="button">버튼1</button>
+</body>
+```
+
+### 오늘의 정리
+```
+1. @RequestBody & @ModelAttribute 
+	1-1. @RequestBody : POST방식을 통해 요청된 Body에 데이터를 담는다.
+	1-2. @ModelAttribute : 데이터를 받아오되 JSON형식에서 파라미터값만 가져온다.
+	ex) { name : "최재민" } => "최재민"
+2. ajax ( https://seypark.tistory.com/65 참고1, https://cofs.tistory.com/404 참고2 ) 
+$.ajax({ 
+	url : // 전송페이지 	=> "/"
+	type : // 전송방식 	 => post / get
+	data : // 전송할 데이터(데이터를 문자열화 하지않기때문에 JSON.stringfy()로 감싸야함 => { 보낼데이터 }
+	dataType : // 서버에서 받을 return된 데이터타입(전송할 데이터의 타입이 아님!!) => xml / html / json / jsonp / script / text
+	contentType : // 새로운 데이터 유형을 정희할 때 사용 
+	
+3. redirect & forward 핵심 
+	3-1. redirect : 요청정보를 새롭게 요청!!
+	3-2. forward  : 요청정보를 재활용!!
+4. 테이블 컬럼을 찾지못하는 오류가 생기면 ajax로직이 틀리진 않았는지 확인하고, Book이라는 객체 @RequestBody를 통해 가져올 수 있는지 확인하기!!
+5. @어노테이션을 사용하지않고 XML에 등록하여 따로 선언하지않아도 사용할 수 있다.
+```
+
+# 20200402
+
+## BookController.java 
+```java
+@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateBookName(@RequestBody Book book) throws Exception { 
+		// @RequestBody가 없다면 Book객체의 데이터를 받지못함
+		bookDAO.updateBook(book);
+		return "redirect:/";
+	}
+```
+
+
+## Detail.js / JavaScript
+#### detail.jsp에서 세션을 저장하고 update.jsp에서 세션정보를 불러온다 
+```javascript 
+<script type="text/javascript">
+	function goBack() { 
+		window.history.back();
+	}
+		// 세션을 이용해서 booId값을 저장하여 update할 때 bookId값을 controller에 요청할 예정
+		sessionStorage.setItem("bookId", ${bookDetail.getBookId()}); // 세션에 bookId값을 value값으로  저장 
+		var Id = sessionStorage.getItem("bookId"); // key값을 이용해 value값을 가져옴 
+		console.log("bookId값 : " + Id); //bookId 값 출력 	
+	
+</script>
+```
+
+
+## update.jsp  
+```javascript 
+// update ajax 
+	$(document).ready(function() {
+		//document가 준비된 후 자바 스크립트 시작 	
+			$("#btn1").on('click', function() {
+				// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
+				var bookIdValue = sessionStorage.getItem("bookId");	 // 세션에 저장된 값을 가져옴 
+				var dataList = {
+						bookId : bookIdValue,
+						bookName : $('#bookName').val(), 
+						// $('#name').val() => id = name의 값 
+						bookPublisher : $('#bookPublisher').val() 
+						// $('#publisher').val() => id = publisher의 값
+					};
+				console.log("버튼 클릭");
+				$.ajax({
+					url : "/update", // 전송페이지(action url)
+					type : "POST", // 전송방식
+					data : JSON.stringify(dataList), //전송할 데이터
+//	 				dataType : "json", // ajax 통신으로 받는 타입
+					contentType : "application/json; charset=utf-8",
+					success : function(data) { 
+						console.log("success");
+						console.info(data);
+						// 출처 : http://blog.naver.com/PostView.nhn?blogId=duddnddl9&logNo=220568856214
+					},
+					error : function(e) {
+						console.log("error(포기하지마라)");
+						console.log(e);
+					}
+				});
+			});
+		});
+</script>
+
+```
+
+### 오늘의 정리
+```
+1. Exception loading sessions from persistent storage 오류 해결 필요 
+2. javascript session은 거의 쓰이지않는 방법이므로 서버에서 bookId값을 가져오기 
+```
+
