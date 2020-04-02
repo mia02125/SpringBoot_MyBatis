@@ -666,4 +666,53 @@ $.ajax({
 1. Exception loading sessions from persistent storage 오류 해결 필요 
 2. javascript session은 거의 쓰이지않는 방법이므로 서버에서 bookId값을 가져오기 
 ```
+```java 
+3. 서버에서 세션을 사용하여 update 하고 싶으면 
+@RequestMapping(value = "/detail/{bookId}", method = RequestMethod.GET)
+	public String detail(@PathVariable(value = "bookId") int bookId ,Model model) throws Exception {
+		Book book = new Book();
+		book.setBookId(bookId);
+		Book books = bookDAO.getBook(book);
+		model.addAttribute("bookDetail", books);
+		session.setAttribute("bookId", books.getBookId()); // session에 books.getBookId()값을 value값으로 저장한다. 
+		return "detail";
+	}
+```java
+@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateBookName(@RequestBody Book book) throws Exception { 
+		int bookId = (Integer)session.getAttribute("bookId"); // value값을 불러와서 변수명을 지정한다. 
+		book.setBookId(bookId);
+		bookDAO.updateBook(book);
+		return "redirect:/";
+	}
+```
+```javascript 
+	// update ajax 
+	$(document).ready(function() {
+			$("#btn1").on('click', function() {
+				var dataList = {
+						bookName : $('#bookName').val(), 
+						bookPublisher : $('#bookPublisher').val() 
+						};
+				console.log("버튼 클릭");
+				$.ajax({
+					url : "/update", // 전송페이지(action url)
+					type : "POST", // 전송방식
+					data : JSON.stringify(dataList), //전송할 데이터
+					contentType : "application/json; charset=utf-8",
+					success : function(data) { 
+						console.log("success");
+						console.info(data);
+						// 출처 : http://blog.naver.com/PostView.nhn?blogId=duddnddl9&logNo=220568856214
+					},
+					error : function(e) {
+						console.log("error(포기하지마라)");
+						console.log(e);
+					}
+				});
+			});
+		});
+```
+```
 
