@@ -615,7 +615,7 @@ $.ajax({
 		window.history.back();
 	}
 		// 세션을 이용해서 booId값을 저장하여 update할 때 bookId값을 controller에 요청할 예정
-		sessionStorage.setItem("bookId", ${bookDetail.getBookId()}); // 세션에 value값을 저장 
+		sessionStorage.setItem("bookId", ${bookDetail.getBookId()}); // 세션에 bookId값을 value값으로  저장 
 		var Id = sessionStorage.getItem("bookId"); // key값을 이용해 value값을 가져옴 
 		console.log("bookId값 : " + Id); //bookId 값 출력 	
 	
