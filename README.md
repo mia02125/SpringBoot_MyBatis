@@ -6,6 +6,7 @@
 - [20203029](#20200329) - detatil(상세보기) 추가하기(한줄평 : selectOne()을 쓰면 Id의 result값이 많아서 오류가 생기네..)
 - [20203031](#20200331) - 특정 데이터 삭제 로직 추가(한줄평 : update 로직에 대해 좀더 공부하자.. @RequestBody..)
 - [20200401](#20200401) -  ajax를 이용해서 데이터를 insert
+- [20200402](#20200402) -  ajax를 이용해서 데이터를 update (한줄평 : 세션을 이용해 javascript에서 값을 사용할 수 있다..서버에서 ID값을 가져오는 방법을 찾아보자) 
 
 
 # 20200320 
@@ -591,3 +592,78 @@ $.ajax({
 4. 테이블 컬럼을 찾지못하는 오류가 생기면 ajax로직이 틀리진 않았는지 확인하고, Book이라는 객체 @RequestBody를 통해 가져올 수 있는지 확인하기!!
 5. @어노테이션을 사용하지않고 XML에 등록하여 따로 선언하지않아도 사용할 수 있다.
 ```
+
+# 20200402
+
+## BookController.java 
+```java
+@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateBookName(@RequestBody Book book) throws Exception { 
+		// @RequestBody가 없다면 Book객체의 데이터를 받지못함
+		bookDAO.updateBook(book);
+		return "redirect:/";
+	}
+```
+
+
+## Detail.js / JavaScript
+#### detail.jsp에서 세션을 저장하고 update.jsp에서 세션정보를 불러온다 
+```javascript 
+<script type="text/javascript">
+	function goBack() { 
+		window.history.back();
+	}
+		// 세션을 이용해서 booId값을 저장하여 update할 때 bookId값을 controller에 요청할 예정
+		sessionStorage.setItem("bookId", ${bookDetail.getBookId()}); // 세션에 value값을 저장 
+		var Id = sessionStorage.getItem("bookId"); // key값을 이용해 value값을 가져옴 
+		console.log("bookId값 : " + Id); //bookId 값 출력 	
+	
+</script>
+```
+
+
+## update.jsp  
+```javascript 
+// update ajax 
+	$(document).ready(function() {
+		//document가 준비된 후 자바 스크립트 시작 	
+			$("#btn1").on('click', function() {
+				// 읽어낼 document가 없으면 스크립트를 못 읽어냄 
+				var bookIdValue = sessionStorage.getItem("bookId");	 // 세션에 저장된 값을 가져옴 
+				var dataList = {
+						bookId : bookIdValue,
+						bookName : $('#bookName').val(), 
+						// $('#name').val() => id = name의 값 
+						bookPublisher : $('#bookPublisher').val() 
+						// $('#publisher').val() => id = publisher의 값
+					};
+				console.log("버튼 클릭");
+				$.ajax({
+					url : "/update", // 전송페이지(action url)
+					type : "POST", // 전송방식
+					data : JSON.stringify(dataList), //전송할 데이터
+//	 				dataType : "json", // ajax 통신으로 받는 타입
+					contentType : "application/json; charset=utf-8",
+					success : function(data) { 
+						console.log("success");
+						console.info(data);
+						// 출처 : http://blog.naver.com/PostView.nhn?blogId=duddnddl9&logNo=220568856214
+					},
+					error : function(e) {
+						console.log("error(포기하지마라)");
+						console.log(e);
+					}
+				});
+			});
+		});
+</script>
+
+```
+
+### 오늘의 정리
+```
+1. Exception loading sessions from persistent storage 오류 해결 필요 
+2. javascript session은 거의 쓰이지않는 방법이므로 서버에서 bookId값을 가져오기 
+```
+
